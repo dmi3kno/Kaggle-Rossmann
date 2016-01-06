@@ -28,7 +28,7 @@ if (WIN) {
   source('~/Documents/Kaggle/Rossmann/dp7.R', echo=TRUE)
   source('~/Documents/Kaggle/Rossmann/fn7.R', echo=TRUE)
 }
-
+# runs Arima model for a store
 runArima <- function(ss, holdout, silent=TRUE) { 
 #  tryCatch({
   cat("Starting Arima for store", ss)
@@ -77,7 +77,7 @@ runArima <- function(ss, holdout, silent=TRUE) {
   return(res)
 #  }, error = function(e) e)
 } #end of ARIMA function
-
+# runs exponential smoothing model for a store
 runES <- function(ss, holdout, silent=TRUE){
   cat("Starting ES for store", ss)
   sss <- paste0("S",ss,collapse = "")
@@ -129,7 +129,7 @@ runES <- function(ss, holdout, silent=TRUE){
   cat("Done with ES for store", ss)
   return(res)
 } # end of ES model
-
+# loops through stores in parallel mode. Can run both Arima and ES - see RunModelA argument
 runTSmodels <- function(stores, holdout, RunModelA, silent){
   pred.df <- NULL
   #RunModelA <- FALSE
@@ -161,7 +161,7 @@ runTSmodels <- function(stores, holdout, RunModelA, silent){
     stopCluster(cl)
 return(pred.df)
     }
-
+# saves results
 saveresults <- function(pred.df, modname){
   sub.df <- subset(test, select=c("Id", "Store", "Date"))
   sub.df <- merge(sub.df, pred.df, by=c("Store","Date"))
@@ -175,8 +175,6 @@ saveresults <- function(pred.df, modname){
 # Initialize the run
 train.stores <- unique(test$Store)
 horizon <- 48
-#holdout <- TRUE
-#goParallel <- TRUE
 startd <- as.Date("2013-01-01")
 startf <- as.Date("2015-06-10")
 td <- as.numeric(startf-startd)

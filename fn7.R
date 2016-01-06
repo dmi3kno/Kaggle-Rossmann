@@ -2,10 +2,12 @@
 # Kaggle Rossmann Store Sales Challenge
 # (c) Dmytro Perepolkin, 2015
 
+# wrapper function for writing to file during the parallel Arima
 catf <- function(..., file="log.txt", append=TRUE){
   cat(..., file=file, append=append)
 }
 
+#step-wise feature selection
 vif_func<-function(in_frame,thresh=10,trace=T,...){
   
   require(fmsb)
@@ -71,6 +73,7 @@ vif_func<-function(in_frame,thresh=10,trace=T,...){
   
 }
 
+# main error function. takes plain predictions and labels (not logs)
 rmpse <- function(preds, labels) {
   preds <- preds[labels!=0]
   labels <- labels[labels!=0]
@@ -253,6 +256,7 @@ MakeXregML <- function(df, store, start.date, end.date){
   #return(xreg)
 }
 
+# Create xreg matrix for ML algorithms
 MakeXregIID <- function(df, store, start.date, end.date){
   # to test the function open these and run in terminal
   #start.date <- startd
@@ -328,6 +332,7 @@ MakeXregIID <- function(df, store, start.date, end.date){
   #return(xreg)
 }
 
+# function for loading the result files
 LoadRes <- function(fpath, files, colnam){
   resAll <- NULL
   for (i in 1:length(files)){
@@ -338,6 +343,7 @@ LoadRes <- function(fpath, files, colnam){
   return(resAll)
 }
 
+# function for saving result files, generates timestamped filenames
 savefiles <- function(preddf, modname){
   fname <- paste0(modname,format(Sys.timeDate(), "%Y%m%d-%H%M%S"), collapse = "-")
   write_csv(preddf, paste0(fname, "df.csv", collapse = ""))
